@@ -16,7 +16,7 @@ Secondly, we should create our new route, `/goals/<goal_id>/tasks`, so that our 
 
 ### Tips
 
-- Use independent research to discover how to set up a one-to-many relationship in Flask.
+- Use independent research and the Learn lesson to discover how to set up a one-to-many relationship in Flask.
 - Remember to run `flask db migrate` and `flask db upgrade` whenever there is a change to the model.
 - Pay attention to the exact shape of the expected JSON. Double-check nested data structures and the names of the keys for any mispellings.
 - Use the tests in `tests/test_wave_06.py` to guide your implementation.
