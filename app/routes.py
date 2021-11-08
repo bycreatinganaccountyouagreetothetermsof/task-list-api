@@ -77,10 +77,12 @@ def add_tasks(goal_id):
     request_body = request.get_json()
     goal.tasks = [Task.query.get(task_id) for task_id in request_body["task_ids"]]
     db.session.commit()
-    return goal.id_and_tasks()
+    return {"id": goal.goal_id, "task_ids": [task.task_id for task in goal.tasks]}
 
 
 @goals_bp.route("/<goal_id>/tasks", methods=["GET"])
 def goal_tasks(goal_id):
     goal = Goal.query.get_or_404(goal_id)
-    return goal.tasks_dict()
+    response = goal.to_dict()
+    response["tasks"] = [task.to_dict() for task in goal.tasks]
+    return response
