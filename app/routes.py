@@ -28,7 +28,7 @@ def handle_tasks():
 
 
 @tasks_bp.route("/<task_id>", methods=["GET", "PUT", "DELETE"])
-def handle_book(task_id):
+def handle_task(task_id):
     task = Task.query.get(task_id)
     if not task:
         return f"Task {task_id} not found", 404
