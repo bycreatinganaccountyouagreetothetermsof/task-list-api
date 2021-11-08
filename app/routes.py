@@ -8,7 +8,10 @@ tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 @tasks_bp.route("", methods=["GET", "POST"])
 def handle_tasks():
     if request.method == "GET":
-        return jsonify([task.to_dict() for task in Task.query.all()])
+        sort = request.args.get("sort") or ""
+        order = {"": None, "asc": Task.title.asc(), "desc": Task.title.desc()}
+        query = Task.query.order_by(order[sort]).all()
+        return jsonify([task.to_dict() for task in query])
     elif request.method == "POST":
         request_body = request.get_json()
         fields_required = ["title", "description", "completed_at"]
