@@ -3,6 +3,17 @@ from app import db
 
 
 class Task(db.Model):
+    """
+    Model for task records
+    ---
+    - attributes:
+        task_id: autoincrementing integer id
+        title: string, required field on creation
+        description: string, required field on creation
+        completed_at: datetime nullable
+        goal: integers, foreign key for Goal model
+    """
+
     task_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     description = db.Column(db.String)
@@ -12,10 +23,16 @@ class Task(db.Model):
     fields_required = ["title", "description", "completed_at"]
 
     def update(self, updates):
+        """
+        utility method for applying updates from provided dict
+        """
         self.title = updates["title"]
         self.description = updates["description"]
 
     def to_dict(self):
+        """
+        utility method for generating json
+        """
         return_dict = {
             "id": self.task_id,
             # "goal_id": self.goal_id,
