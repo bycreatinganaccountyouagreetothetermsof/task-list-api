@@ -7,6 +7,11 @@ class Task(db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     completed_at = db.Column(db.DateTime, nullable=True)
+    fields_required = ["title", "description", "completed_at"]
+
+    def update(self, updates):
+        self.title = updates["title"]
+        self.description = updates["description"]
 
     def to_dict(self):
         return {
