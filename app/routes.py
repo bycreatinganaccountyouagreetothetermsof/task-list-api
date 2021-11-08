@@ -3,12 +3,40 @@
 
 started 7 nov
 
-wave 4 incomplete. may implement on mastodon instead of slack, later
+finished 7 nov, heroku 8 nov
+
+wave 4 unimplemented. may implement on mastodon instead of slack, later
+
+
+# optional enhancements
+
+## edge cases
+
+what should happen if...
+
+- when creating a task, the value of completed_at is a string that is not a datetime?
+    - return 400 and an error detail json. not implemented.
+- when updating a task, the value of completed_at is a string that is not a datetime?
+    - return 400 and an error detail json. not implemented.
+- when getting all tasks, and using query params, the value of sort is not "desc" or "asc"?
+    - fall back to unsorted. this is implemented by the dict.get call that returns None.
+
+## re-organize routes
 
 some routes are genericized and switch on dict provided by select_model and blueprint name
 
-as much as possible, json rendering is kept out of models and performed in route functions, aside from the typical to_dict
+## model instance methods
 
+as much as possible, json rendering is kept out of models and performed in route functions, aside from the typical to_dict.
+i think this is appropriate as the correct implementation would be to have this behavior in a "view" but this was not in the lesson
+
+## list comprehensions
+
+list comprehensions are used where appropriate.
+
+## more query params
+
+not implemented
 """
 
 from app import db
