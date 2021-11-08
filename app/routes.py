@@ -11,8 +11,13 @@ def handle_tasks():
         return jsonify([task.to_dict() for task in Task.query.all()])
     elif request.method == "POST":
         request_body = request.get_json()
+        fields_required = ["title", "description", "completed_at"]
+        if not all([field in request_body for field in fields_required]):
+            return {"details": "Invalid data"}, 400
         new_task = Task(
-            title=request_body["title"], description=request_body["description"]
+            title=request_body["title"],
+            description=request_body["description"],
+            completed_at=request_body["completed_at"],
         )
         db.session.add(new_task)
         db.session.commit()
