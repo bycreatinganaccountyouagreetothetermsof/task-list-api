@@ -16,7 +16,7 @@ def handle_tasks():
         )
         db.session.add(new_task)
         db.session.commit()
-        return f"Task {new_task.title} successfully created", 201
+        return {"task": new_task.to_dict()}, 201
 
 
 @tasks_bp.route("/<task_id>", methods=["GET", "PUT", "DELETE"])
@@ -31,8 +31,8 @@ def handle_book(task_id):
         task.title = request_body["title"]
         task.description = request_body["description"]
         db.session.commit()
-        return f"Task {task_id} successfully updated"
+        return {"task": task.to_dict()}
     elif request.method == "DELETE":
         db.session.delete(task)
         db.session.commit()
-        return f"Task {task_id} successfully deleted"
+        return {"details": f'Task {task_id} "{task.title}" successfully deleted'}
