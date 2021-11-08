@@ -15,11 +15,11 @@ wave 4 unimplemented. may implement on mastodon instead of slack, later
 what should happen if...
 
 - when creating a task, the value of completed_at is a string that is not a datetime?
-    - return 400 and an error detail json. not implemented.
+    - accept rest of fields and fail over to None, 200 success.
 - when updating a task, the value of completed_at is a string that is not a datetime?
-    - return 400 and an error detail json. not implemented.
+    - accept rest of fields and maintain completed_at in existing record, 200 success.
 - when getting all tasks, and using query params, the value of sort is not "desc" or "asc"?
-    - fall back to unsorted. this is implemented by the dict.get call that returns None.
+    - fall back to unsorted, 200 success.
 
 ## re-organize routes
 
@@ -139,7 +139,7 @@ def complete_task(task_id):
             description: Requested task does not exist.
     """
     task = Task.query.get_or_404(task_id)
-    task.completed_at = datetime.now()
+    task.completed_at = datetime.utcnow()
     db.session.commit()
     return {"task": task.to_dict()}
 

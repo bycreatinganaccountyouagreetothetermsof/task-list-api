@@ -1,5 +1,6 @@
 from flask import current_app
 from app import db
+from datetime import datetime
 
 
 class Task(db.Model):
@@ -28,6 +29,11 @@ class Task(db.Model):
         """
         self.title = updates["title"]
         self.description = updates["description"]
+        if "completed_at" in updates:
+            self.datetime = (  # completed_at accepted only as http_time format
+                datetime.strptime(updates["completed_at"], "%a, %d %b %Y %H:%M:%S GMT")
+                or self.datetime
+            )
 
     def to_dict(self):
         """
