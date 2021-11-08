@@ -1,6 +1,8 @@
 """
 # project notes
 
+started 7 nov
+
 wave 4 incomplete. may implement on mastodon instead of slack, later
 
 some routes are genericized and switch on dict provided by select_model and blueprint name
