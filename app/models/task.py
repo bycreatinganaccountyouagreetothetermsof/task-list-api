@@ -16,10 +16,13 @@ class Task(db.Model):
         self.description = updates["description"]
 
     def to_dict(self):
-        return {
+        return_dict = {
             "id": self.task_id,
-            "goal_id": self.goal_id,
+            # "goal_id": self.goal_id,
             "title": self.title,
             "description": self.description,
             "is_complete": self.completed_at != None,
         }
+        if self.goal_id is not None:
+            return_dict["goal_id"] = self.goal_id
+        return return_dict
