@@ -6,30 +6,35 @@ from datetime import datetime
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 
 
-@tasks_bp.route("", methods=["GET", "POST"])
-def handle_tasks():
-    if request.method == "GET":
-        sort = request.args.get("sort") or ""
-        order = {"": None, "asc": Task.title.asc(), "desc": Task.title.desc()}
-        query = Task.query.order_by(order[sort]).all()
-        return jsonify([task.to_dict() for task in query])
-    elif request.method == "POST":
-        request_body = request.get_json()
-        fields_required = ["title", "description", "completed_at"]
-        if not all([field in request_body for field in fields_required]):
-            return {"details": "Invalid data"}, 400
-        new_task = Task(
-            title=request_body["title"],
-            description=request_body["description"],
-            completed_at=request_body["completed_at"],
-        )
-        db.session.add(new_task)
-        db.session.commit()
-        return {"task": new_task.to_dict()}, 201
+@tasks_bp.route("", methods=["GET"])
+def get_tasks():
+    sort = {"asc": Task.title.asc(), "desc": Task.title.desc()}.get(
+        request.args.get("sort")
+    )
+    tasks = Task.query.order_by(sort).all()
+    return jsonify([task.to_dict() for task in tasks])
+
+
+@tasks_bp.route("", methods=["POST"])
+def post_new_task():
+    request_body = request.get_json()
+
+    fields_required = ["title", "description", "completed_at"]
+    if not all([field in request_body for field in fields_required]):
+        return {"details": "Invalid data"}, 400
+
+    new_task = Task(
+        title=request_body["title"],
+        description=request_body["description"],
+        completed_at=request_body["completed_at"],
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    return {"task": new_task.to_dict()}, 201
 
 
 @tasks_bp.route("/<task_id>", methods=["GET", "PUT", "DELETE"])
-def handle_task(task_id):
+def single_task(task_id):
     task = Task.query.get(task_id)
     if not task:
         return f"Task {task_id} not found", 404
