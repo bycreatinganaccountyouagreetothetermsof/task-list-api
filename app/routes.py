@@ -57,9 +57,7 @@ def single_item(item_id):
 
 @tasks_bp.route("/<task_id>/mark_complete", methods=["PATCH"])
 def complete_task(task_id):
-    task = Task.query.get(task_id)
-    if not task:
-        return f"Task {task_id} not found", 404
+    task = Task.query.get_or_404(task_id)
     task.completed_at = datetime.now()
     db.session.commit()
     return {"task": task.to_dict()}
@@ -67,10 +65,22 @@ def complete_task(task_id):
 
 @tasks_bp.route("/<task_id>/mark_incomplete", methods=["PATCH"])
 def incomplete_task(task_id):
-    task = Task.query.get(task_id)
-    if not task:
-        return f"Task {task_id} not found", 404
-        # return jsonify(None), 404
+    task = Task.query.get_or_404(task_id)
     task.completed_at = None
     db.session.commit()
     return {"task": task.to_dict()}
+
+
+@goals_bp.route("/<goal_id>/tasks", methods=["POST"])
+def add_tasks(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    request_body = request.get_json()
+    goal.tasks = [Task.query.get(task_id) for task_id in request_body["task_ids"]]
+    db.session.commit()
+    return goal.id_and_tasks()
+
+
+@goals_bp.route("/<goal_id>/tasks", methods=["GET"])
+def goal_tasks(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    return goal.tasks_dict()

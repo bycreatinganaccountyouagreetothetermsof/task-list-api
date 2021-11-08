@@ -18,6 +18,7 @@ class Task(db.Model):
     def to_dict(self):
         return {
             "id": self.task_id,
+            "goal_id": self.goal_id,
             "title": self.title,
             "description": self.description,
             "is_complete": self.completed_at != None,
